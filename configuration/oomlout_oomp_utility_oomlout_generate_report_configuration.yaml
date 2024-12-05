@@ -1,0 +1,18 @@
+outputs:
+  - name: "parts_all"        
+  - name: "parts_basic"
+    keys: 
+      - "short_code"
+      - "name"
+      - "classification"
+      - "type"
+      - "size"
+      - "color"
+      - "description_main"
+      - "description_extra"
+      - "manufacturer"
+      - "part_number"
+
+
+
+    

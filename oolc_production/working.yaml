@@ -1,0 +1,6 @@
+project_id: oomlout_decorative_photo_print_collage_divider
+project_name: Oomlout Decorative Photo Print Collage Divider
+project_repo: https://github.com/oomlout/oomlout_decorative_photo_print_collage_divider
+production_format:
+  oolc_1:
+    file_location: source_files/oolc_1.cdr

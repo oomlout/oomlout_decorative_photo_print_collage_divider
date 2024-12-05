@@ -1,0 +1,7 @@
+repo:
+  - "https://github.com/oomlout/oomlout_bolt_packaging_tin_hinged_lid_version_1"
+file:
+  - repo: "oomlout_bolt_packaging_tin_hinged_lid_version_1"
+    source: "scad_output\\oobb_test_main_spacer_08_10_01_ex_width_start_129_height_start_169_depth_start_18\\3dpr.stl"
+    destination: "release\\three_d_printer_files\\hinged_tin_version\\tin_spacer_quantity_1.stl"
+  
