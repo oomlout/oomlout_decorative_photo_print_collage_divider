@@ -162,22 +162,33 @@ def plot_positions(positions, large_width, large_height, small_width, small_heig
 
     for pos in positions:
         x, y, rotation = pos
-        draw_rotated_rectangle(img, x, y, small_width, small_height, rotation)
+        draw_rotated_rectangle_color(img, x, y, small_width, small_height, rotation)
 
     cv2.imwrite(file_output, img)
 
-def draw_rotated_rectangle(img, x, y, width, height, angle):
+    #do with black outline only
+    img = np.zeros((large_height, large_width, 3), np.uint8)
+    img.fill(255)
+    
+    for pos in positions:
+        x, y, rotation = pos
+        draw_rotated_rectangle_color(img, x, y, small_width, small_height, rotation, mode="outline")
+
+    file_outbout_black_and_white_outline = file_output.replace(".png", "_black_and_white_outline.png")
+    cv2.imwrite(file_outbout_black_and_white_outline, img)
+
+def draw_rotated_rectangle_color(img, x, y, width, height, angle, mode="fill"):
     rect = box(x, y, x + width, y + height)
     rotated_rect = rotate(rect, angle, origin='center')
     coords = list(rotated_rect.exterior.coords)
     pts = [(int(pt[0]), int(pt[1])) for pt in coords[:-1]]  # Exclude the last point because it's the same as the first
     
     #mode = "outline"
-    mode = "fill"
+    #mode = "fill"
     if mode == "fill":
         cv2.fillPoly(img, [np.array(pts)], color=(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
     else:
-        cv2.polylines(img, [np.array(pts)], isClosed=True, color=(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), thickness=2)
+        cv2.polylines(img, [np.array(pts)], isClosed=True, color=(0,0,0), thickness=2)
 
 def calculate_distance(point1, point2):
     return math.sqrt((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2)
