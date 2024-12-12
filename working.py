@@ -6,6 +6,7 @@ import cv2
 from shapely.geometry import box
 from shapely.affinity import rotate
 import yaml
+import copy
 
 def main(**kwargs):
     file_source = kwargs.get('file_source', 'image\\source.jpg')
@@ -160,9 +161,11 @@ def plot_positions(positions, large_width, large_height, small_width, small_heig
     img = np.zeros((large_height, large_width, 3), np.uint8)
     img.fill(255)
 
+    count = 1
     for pos in positions:
         x, y, rotation = pos
-        draw_rotated_rectangle_color(img, x, y, small_width, small_height, rotation)
+        draw_rotated_rectangle_color(img, x, y, small_width, small_height, rotation, count)
+        count += 1
 
     cv2.imwrite(file_output, img)
 
@@ -170,14 +173,17 @@ def plot_positions(positions, large_width, large_height, small_width, small_heig
     img = np.zeros((large_height, large_width, 3), np.uint8)
     img.fill(255)
     
+    count = 1
     for pos in positions:
+        
         x, y, rotation = pos
-        draw_rotated_rectangle_color(img, x, y, small_width, small_height, rotation, mode="outline")
+        draw_rotated_rectangle_color(img, x, y, small_width, small_height, rotation, mode="outline", image_number=count)
+        count += 1
 
     file_outbout_black_and_white_outline = file_output.replace(".png", "_black_and_white_outline.png")
     cv2.imwrite(file_outbout_black_and_white_outline, img)
 
-def draw_rotated_rectangle_color(img, x, y, width, height, angle, mode="fill"):
+def draw_rotated_rectangle_color(img, x, y, width, height, angle, mode="fill", image_number = ""):
     rect = box(x, y, x + width, y + height)
     rotated_rect = rotate(rect, angle, origin='center')
     coords = list(rotated_rect.exterior.coords)
@@ -187,8 +193,22 @@ def draw_rotated_rectangle_color(img, x, y, width, height, angle, mode="fill"):
     #mode = "fill"
     if mode == "fill":
         cv2.fillPoly(img, [np.array(pts)], color=(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+        
     else:
         cv2.polylines(img, [np.array(pts)], isClosed=True, color=(0,0,0), thickness=2)
+
+    #addimage_number to middle of rectangle
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    font_scale = 1
+    font_thickness = 2
+    text = f"{image_number}"
+    text_size = cv2.getTextSize(text, font, font_scale, font_thickness)[0]
+    text_x = x + (width - text_size[0]) // 2
+    text_y = y + (height + text_size[1]) // 2
+    cv2.putText(img, text, (text_x, text_y), font, font_scale, (0, 0, 0), font_thickness, cv2.LINE_AA)
+
+
+
 
 def calculate_distance(point1, point2):
     return math.sqrt((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2)
